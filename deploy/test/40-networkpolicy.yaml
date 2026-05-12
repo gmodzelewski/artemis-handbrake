@@ -1,0 +1,52 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: handbrake-webhook-netpol
+  namespace: artemis-handbrake-test
+spec:
+  podSelector:
+    matchLabels:
+      app: handbrake-webhook
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: openshift-user-workload-monitoring
+        - podSelector: {}
+      ports:
+        - port: 8080
+          protocol: TCP
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: mock-jolokia
+      ports:
+        - port: 8161
+          protocol: TCP
+    - {}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: mock-jolokia-netpol
+  namespace: artemis-handbrake-test
+spec:
+  podSelector:
+    matchLabels:
+      app: mock-jolokia
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: handbrake-webhook
+      ports:
+        - port: 8161
+          protocol: TCP
+  egress: []

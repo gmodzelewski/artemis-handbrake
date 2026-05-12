@@ -1,0 +1,44 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: handbrake-memory
+  namespace: artemis-handbrake-test
+  labels:
+    role: alert-rules
+spec:
+  groups:
+    - name: artemis-handbrake
+      interval: 30s
+      rules:
+        - alert: WorkloadMemoryHigh
+          annotations:
+            summary: Pod memory over 80% of limit (test namespace)
+          expr: |
+            (
+              sum by (namespace, pod, container) (
+                container_memory_working_set_bytes{namespace="artemis-handbrake-test", container!="", pod!=""}
+              )
+              /
+              sum by (namespace, pod, container) (
+                kube_pod_container_resource_limits{namespace="artemis-handbrake-test", resource="memory", container!=""}
+              )
+            ) > 0.8
+          for: 2m
+          labels:
+            severity: warning
+        - alert: WorkloadMemoryLow
+          annotations:
+            summary: Pod memory under 65% of limit (test namespace)
+          expr: |
+            (
+              sum by (namespace, pod, container) (
+                container_memory_working_set_bytes{namespace="artemis-handbrake-test", container!="", pod!=""}
+              )
+              /
+              sum by (namespace, pod, container) (
+                kube_pod_container_resource_limits{namespace="artemis-handbrake-test", resource="memory", container!=""}
+              )
+            ) < 0.65
+          for: 3m
+          labels:
+            severity: warning

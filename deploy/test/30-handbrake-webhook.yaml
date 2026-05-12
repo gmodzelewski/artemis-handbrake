@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: handbrake-webhook
+  namespace: artemis-handbrake-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: handbrake-webhook
+  template:
+    metadata:
+      labels:
+        app: handbrake-webhook
+    spec:
+      containers:
+        - name: webhook
+          image: image-registry.openshift-image-registry.svc:5000/artemis-handbrake-test/handbrake-webhook:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: LISTEN_ADDR
+              value: ":8080"
+            - name: JOLOKIA_URL
+              value: "http://mock-jolokia:8161/console/jolokia"
+            - name: JOLOKIA_ORIGIN
+              value: "http://mock-jolokia:8161"
+            - name: BROKER_NAME
+              value: "0.0.0.0"
+            - name: ARTEMIS_ADDRESS
+              value: "TEST.ADDRESS"
+            - name: ALERT_PAUSE_NAME
+              value: WorkloadMemoryHigh
+            - name: ALERT_RESUME_NAME
+              value: WorkloadMemoryLow
+            - name: JOLOKIA_USER
+              valueFrom:
+                secretKeyRef:
+                  name: jolokia-credentials
+                  key: username
+            - name: JOLOKIA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: jolokia-credentials
+                  key: password
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 20
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: handbrake-webhook
+  namespace: artemis-handbrake-test
+spec:
+  selector:
+    app: handbrake-webhook
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080

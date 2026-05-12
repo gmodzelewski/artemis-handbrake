@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1beta1
+kind: AlertmanagerConfig
+metadata:
+  name: handbrake-webhook
+  namespace: artemis-handbrake-test
+spec:
+  route:
+    receiver: handbrake
+    matchers:
+      - name: alertname
+        matchType: "=~"
+        value: WorkloadMemoryHigh|WorkloadMemoryLow
+  receivers:
+    - name: handbrake
+      webhookConfigs:
+        - url: http://handbrake-webhook.artemis-handbrake-test.svc:8080/webhook
+          sendResolved: false

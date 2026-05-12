@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: artemis-handbrake-test
+resources:
+  - 00-namespace.yaml
+  - 01-imagestreams.yaml
+  - 02-buildconfig-webhook.yaml
+  - 03-buildconfig-mock.yaml
+  - 10-secret-jolokia.yaml
+  - 20-mock-jolokia.yaml
+  - 25-test-workload.yaml
+  - 30-handbrake-webhook.yaml
+  - 40-networkpolicy.yaml
+  - 50-prometheus-rule.yaml
+  - 60-alertmanagerconfig.yaml

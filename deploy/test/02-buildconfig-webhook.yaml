@@ -1,0 +1,18 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: handbrake-webhook
+  namespace: artemis-handbrake-test
+spec:
+  failedBuildsHistoryLimit: 2
+  successfulBuildsHistoryLimit: 2
+  source:
+    type: Binary
+  strategy:
+    type: Docker
+    dockerStrategy:
+      dockerfilePath: Dockerfile.webhook
+  output:
+    to:
+      kind: ImageStreamTag
+      name: handbrake-webhook:latest

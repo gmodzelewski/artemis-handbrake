@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mock-jolokia
+  namespace: artemis-handbrake-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mock-jolokia
+  template:
+    metadata:
+      labels:
+        app: mock-jolokia
+    spec:
+      containers:
+        - name: mock
+          image: image-registry.openshift-image-registry.svc:5000/artemis-handbrake-test/mock-jolokia:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8161
+          env:
+            - name: LISTEN_ADDR
+              value: ":8161"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 64Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mock-jolokia
+  namespace: artemis-handbrake-test
+spec:
+  selector:
+    app: mock-jolokia
+  ports:
+    - name: http
+      port: 8161
+      targetPort: 8161

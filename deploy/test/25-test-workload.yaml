@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-workload
+  namespace: artemis-handbrake-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-workload
+  template:
+    metadata:
+      labels:
+        app: test-workload
+    spec:
+      containers:
+        - name: sleep
+          image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+          command: ["/bin/sh", "-c", "sleep infinity"]
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 10m
+            limits:
+              memory: 256Mi
