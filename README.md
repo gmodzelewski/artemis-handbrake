@@ -10,7 +10,7 @@
 | [docs/OPERATOR-SOURCE.md](./docs/OPERATOR-SOURCE.md) | Go file tree + paste-ready code until `*.go` live in this repo |
 | [DEPLOYMENT.md](./DEPLOYMENT.md) | OpenShift: build, RBAC, CRD, operator, CR, networking |
 
-Canonical folder for this project: **`gmodzelewski/artemis-handbrake`** (this directory).
+Canonical clone path: **`/Users/gmodzele/workspace/gmodzelewski/artemis-handbrake`** (this repository).
 
 ## Webhook receiver (implemented)
 
