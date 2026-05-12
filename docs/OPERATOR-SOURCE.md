@@ -1,4 +1,4 @@
-> **Canonical copy:** this file lives under `gmodzelewski/artemis-handbrake/docs/OPERATOR-SOURCE.md`.
+> **Canonical copy:** this file lives under `/Users/gmodzele/workspace/gmodzelewski/artemis-handbrake/docs/OPERATOR-SOURCE.md`.
 
 # artemis-handbrake — Go operator implementation (drop-in)
 

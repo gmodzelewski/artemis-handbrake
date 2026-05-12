@@ -1,4 +1,4 @@
-> **Canonical copy:** this file lives under `gmodzelewski/artemis-handbrake/docs/DESIGN.plan.md`. Edit here; legacy copy may remain under `~/.cursor/plans/` until removed.
+> **Canonical copy:** this file lives under `/Users/gmodzele/workspace/gmodzelewski/artemis-handbrake/docs/DESIGN.plan.md`. Edit here; legacy copy may remain under `~/.cursor/plans/` until removed.
 
 ---
 name: Artemis Handbrake
